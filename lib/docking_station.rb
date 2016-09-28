@@ -6,14 +6,23 @@ class DockingStation
   end
 
   def release_bike
-    fail "error - no bikes available" if @array.count <= 0
+    fail "error - no bikes available" if empty?
     @array.pop
   end
 
   def dock(bike)
-    fail "error - docking station has exceeded 20" if @array.count >= 20
+    fail "error - docking station has exceeded 20" if full?
     @array << bike
-
   end
+
+private
+
+def full?
+  @array.count >= 20
+end
+
+def empty?
+  @array.count <= 0
+end
 
 end
