@@ -28,8 +28,24 @@ require 'spec_helper'
     describe '#dock' do
       it "should not accept more bikes than its capacity" do
         DockingStation::DEFAULT_CAPACITY.times { subject.dock Bike.new }
-        expect{subject.dock(Bike.new)}.to raise_error("error - docking station has exceeded 20")
+        expect{subject.dock(Bike.new)}.to raise_error("error - docking station has exceeded capacity")
       end
     end
 
-end
+    describe '#initialize' do
+      it "should not accept more bikes than newly specified capacity" do
+        subject.capacity.times { subject.dock Bike.new }
+        expect{subject.dock(Bike.new)}.to raise_error("error - docking station has exceeded capacity")
+      end
+
+      it "should not accept more bikes than 50" do
+        docking_station = DockingStation.new(50)
+        50.times {docking_station.dock Bike.new}
+        expect{docking_station.dock(Bike.new)}.to raise_error("error - docking station has exceeded capacity")
+      end
+
+      it 'has a default capacity' do
+        expect(subject.capacity).to eq DockingStation::DEFAULT_CAPACITY
+      end
+    end
+  end
