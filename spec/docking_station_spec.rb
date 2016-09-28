@@ -15,7 +15,8 @@ require 'spec_helper'
 
     it 'returns docked bikes' do
       bike = Bike.new
-      expect(subject.dock(bike)).to eq bike
+      subject.dock(bike)
+      expect(subject.release_bike).to eq bike
     end
 
     describe '#docking_station' do
@@ -26,8 +27,11 @@ require 'spec_helper'
 
     describe '#dock' do
       it "should not accept more bikes than its capacity" do
-        subject.dock(Bike.new)
-        expect{subject.dock(Bike.new)}.to raise_error("error - docking station is full")
+
+        20.times { subject.dock Bike.new }
+
+        #subject.dock(Bike.new)
+        expect{subject.dock(Bike.new)}.to raise_error("error - docking station has exceeded 20")
       end
     end
 
