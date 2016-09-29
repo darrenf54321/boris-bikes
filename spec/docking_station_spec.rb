@@ -5,7 +5,7 @@ require 'spec_helper'
    it { is_expected.to respond_to :release_bike}
 
    it "should get a working bike" do
-     bike = Bike.new
+     bike = double(:bike)
      expect(bike.working).to eq true
    end
 
@@ -14,7 +14,7 @@ require 'spec_helper'
     it { is_expected.to respond_to(:dock).with(1).argument }
 
     it 'returns docked bikes' do
-      bike = Bike.new
+      bike = double(:bike)
       subject.dock(bike)
       expect(subject.release_bike).to eq bike
     end
@@ -27,21 +27,26 @@ require 'spec_helper'
 
     describe '#dock' do
       it "should not accept more bikes than its capacity" do
-        DockingStation::DEFAULT_CAPACITY.times { subject.dock Bike.new }
-        expect{subject.dock(Bike.new)}.to raise_error("error - docking station has exceeded capacity")
+        DockingStation::DEFAULT_CAPACITY.times { subject.dock double(:bike) }
+        expect{subject.dock(double(:bike))}.to raise_error("error - docking station has exceeded capacity")
+      end
+      it "should recognise a broken bike" do
+        broken_bike= double(:bike)
+        broken_bike.report_broken
+        expect(subject.dock(broken_bike)).to eq("Thanks for returning a faulty bike.")
       end
     end
 
     describe '#initialize' do
       it "should not accept more bikes than newly specified capacity" do
-        subject.capacity.times { subject.dock Bike.new }
-        expect{subject.dock(Bike.new)}.to raise_error("error - docking station has exceeded capacity")
+        subject.capacity.times { subject.dock double(:bike) }
+        expect{subject.dock(double(:bike))}.to raise_error("error - docking station has exceeded capacity")
       end
 
       it "should not accept more bikes than 50" do
         docking_station = DockingStation.new(50)
-        50.times {docking_station.dock Bike.new}
-        expect{docking_station.dock(Bike.new)}.to raise_error("error - docking station has exceeded capacity")
+        50.times {docking_station.dock double(:bike)}
+        expect{docking_station.dock(double(:bike))}.to raise_error("error - docking station has exceeded capacity")
       end
 
       it 'has a default capacity' do
@@ -51,9 +56,10 @@ require 'spec_helper'
 
     describe '#release_bike' do
       it "should not release a broken bike" do
-        broken_bike= Bike.new
+        broken_bike= double(:bike)
         broken_bike.report_broken
-        expect(subject.dock(broken_bike)).to eq("Thanks for returning a faulty bike.")
+        subject.dock(broken_bike)
+        expect{subject.release_bike}. to raise_error("error - no bikes available")
       end
     end
 
