@@ -10,7 +10,7 @@ describe Bike do
     it "should make working? false" do
       bike = Bike.new
       bike.report_broken
-      expect(bike.working?).to eq(false)
+      expect(bike.working).to eq(false)
     end
   end
 end

@@ -6,7 +6,7 @@ require 'spec_helper'
 
    it "should get a working bike" do
      bike = Bike.new
-     expect(bike).to be_working
+     expect(bike.working).to eq true
    end
 
     it { is_expected.to respond_to(:bike) }
@@ -48,4 +48,13 @@ require 'spec_helper'
         expect(subject.capacity).to eq DockingStation::DEFAULT_CAPACITY
       end
     end
+
+    describe '#release_bike' do
+      it "should not release a broken bike" do
+        broken_bike= Bike.new
+        broken_bike.report_broken
+        expect{subject.dock(broken_bike)}.to raise_error("Bike is broken")
+      end
+    end
+
   end
