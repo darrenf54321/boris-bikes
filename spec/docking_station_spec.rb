@@ -53,7 +53,7 @@ require 'spec_helper'
       it "should not release a broken bike" do
         broken_bike= Bike.new
         broken_bike.report_broken
-        expect{subject.dock(broken_bike)}.to raise_error("Bike is broken")
+        expect(subject.dock(broken_bike)).to eq("Thanks for returning a faulty bike.")
       end
     end
 

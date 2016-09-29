@@ -1,11 +1,12 @@
 class DockingStation
-  attr_reader :bike
+  attr_reader :bike, :not_working
   attr_accessor :capacity
   DEFAULT_CAPACITY = 20
 
   def initialize(capacity = DEFAULT_CAPACITY)
     @array = []
     @capacity = capacity
+    @not_working = []
   end
 
   def release_bike
@@ -15,8 +16,13 @@ class DockingStation
 
   def dock(bike)
     fail "error - docking station has exceeded capacity" if full?
-    array << bike
+      if bike.working
+        array << bike
+      else
+        not_working << bike
+        "Thanks for returning a faulty bike."
   end
+end
 
 private
 
